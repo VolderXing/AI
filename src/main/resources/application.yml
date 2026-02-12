@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: engine-ai-control
+  main:
+    allow-bean-definition-overriding: true
+
+# DeepSeek??
+ai:
+  deepseek:
+    api-key: sk-a11d555ecbdd4d50856a6bf8bf43a520
+    base-url: https://api.deepseek.com/v1
+    model: deepseek-chat
+    max-tokens: 1000
+    timeout: 30
+
+server:
+  port: 8080
+logging:
+  level:
+    com.xcnode.test: INFO
+    org.springframework.web: INFO
+# OpenAPI ??
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  show-actuator: true
+  writer-with-default-pretty-printer: true
+  setting:
+    language: zh_cn  # ??
+    enable-version: true  # ?????
+    enable-footer: true  # ????
+    footer-custom-content: "AI Controller Backend v1.0"
+    enable-footer-custom: true
+    enable-home-custom: true  # ?????
+    home-custom-path: classpath:markdown/home.md  # ????? Markdown
+    enable-swagger-models: true
+    swagger-model-name: ????
