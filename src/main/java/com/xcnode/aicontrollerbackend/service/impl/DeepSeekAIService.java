@@ -1,10 +1,10 @@
 package com.xcnode.aicontrollerbackend.service.impl;
 
+import com.xcnode.aicontrollerbackend.model.command.EngineCommand;
+import com.xcnode.aicontrollerbackend.service.AIService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.xcnode.aicontrollerbackend.model.command.EngineCommand;
-import com.xcnode.aicontrollerbackend.service.AIService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpHeaders;
@@ -65,38 +65,17 @@ public class DeepSeekAIService implements AIService {
         requestBody.put("temperature", 0.3);
         requestBody.put("stream", false);
 
-        System.out.println("📤 发送请求到 DeepSeek API");
-        System.out.println("📤 请求URL: " + webClient.toString());
-        System.out.println("📤 请求体: " + JSON.toJSONString(requestBody));
-
-        try {
-            String response = webClient.post()
-                    .uri("/chat/completions")
-                    .bodyValue(requestBody)
-                    .retrieve()
-                    .onStatus(status -> status.isError(), clientResponse -> {
-                        System.err.println("❌ DeepSeek API 错误状态码: " + clientResponse.statusCode());
-                        return clientResponse.bodyToMono(String.class)
-                                .doOnNext(errorBody -> System.err.println("❌ 错误响应体: " + errorBody))
-                                .then(Mono.error(new RuntimeException("API 调用失败: " + clientResponse.statusCode())));
-                    })
-                    .bodyToMono(String.class)
-                    .timeout(Duration.ofSeconds(timeout))
-                    .doOnError(e -> System.err.println("💥 DeepSeek请求异常: " + e.getMessage()))
-                    .onErrorResume(e -> {
-                        System.err.println("💥 DeepSeek请求失败: " + e.getMessage());
-                        return Mono.just("{\"error\": \"API调用失败: " + e.getMessage() + "\"}");
-                    })
-                    .block();
-
-            System.out.println("📩 DeepSeek API 原始响应: " + response);
-            return response;
-
-        } catch (Exception e) {
-            System.err.println("❌ DeepSeek API 调用异常: " + e.getMessage());
-            e.printStackTrace();
-            return "{\"error\": \"API调用异常: " + e.getMessage() + "\"}";
-        }
+        return webClient.post()
+                .uri("/chat/completions")
+                .bodyValue(requestBody)
+                .retrieve()
+                .bodyToMono(String.class)
+                .timeout(Duration.ofSeconds(timeout))
+                .onErrorResume(e -> {
+                    System.err.println("💥 DeepSeek请求失败: " + e.getMessage());
+                    return Mono.just("{\"error\": \"API调用失败: " + e.getMessage() + "\"}");
+                })
+                .block();
     }
 
     private String createParsePrompt(String voiceCommand) {

@@ -12,7 +12,6 @@ ai:
     model: deepseek-chat
     max-tokens: 1000
     timeout: 30
-
 server:
   port: 8080
 logging:
@@ -40,4 +39,4 @@ springdoc:
     enable-home-custom: true  # ?????
     home-custom-path: classpath:markdown/home.md  # ????? Markdown
     enable-swagger-models: true
-    swagger-model-name: ????
+    swagger-model-name:
