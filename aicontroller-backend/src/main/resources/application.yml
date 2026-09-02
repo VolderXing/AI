@@ -7,7 +7,7 @@ spring:
 # DeepSeek??
 ai:
   deepseek:
-    api-key: sk-a11d555ecbdd4d50856a6bf8bf43a520
+    api-key: sk-aaaaaaa
     base-url: https://api.deepseek.com/v1
     model: deepseek-chat
     max-tokens: 1000
